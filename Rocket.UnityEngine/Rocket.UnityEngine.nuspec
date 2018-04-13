@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<package>
+  <metadata>
+    <id>Rocket.Runtime</id>
+    <version>$version$</version>
+    <authors>Enes Sadık Özbek&lt;esozbek.me&gt;</authors>
+    <owners>Sven Mawby&lt;fr34kyn01535@bam.yt&gt;</owners>
+    <licenseUrl>https://github.com/RocketMod/Rocket.UnityEngine/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://rocketmod.net/</projectUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>UnityEngine specific implementations for RocketMod Game Server Plugin Framework</description>
+    <copyright>Sven Mawby&lt;fr34kyn01535@bam.yt&gt; ©</copyright>
+    <tags>Rocket Mod UnityEngine</tags>
+    <dependencies>
+      <dependency id="Rocket.API" version="$version$" />
+      <dependency id="Rocket.Core" version="$version$" />
+      <dependency id="Rocket.Compability" version="$version$" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="Rocket.Runtime.dll" target="lib/net35" />
+    <file src="Rocket.Runtime.xml" target="lib/net35" />
+  </files>
+</package>
