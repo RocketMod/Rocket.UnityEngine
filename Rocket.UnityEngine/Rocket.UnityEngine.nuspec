@@ -2,7 +2,7 @@
 
 <package>
   <metadata>
-    <id>Rocket.Runtime</id>
+    <id>Rocket.UnityEngine</id>
     <version>$version$</version>
     <authors>Enes Sadık Özbek&lt;esozbek.me&gt;</authors>
     <owners>Sven Mawby&lt;fr34kyn01535@bam.yt&gt;</owners>
@@ -19,7 +19,6 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="Rocket.Runtime.dll" target="lib/net35" />
-    <file src="Rocket.Runtime.xml" target="lib/net35" />
+    <file src="Rocket.UnityEngine.dll" target="lib/net35" />
   </files>
 </package>
