@@ -12,11 +12,11 @@ namespace Rocket.UnityEngine.Scheduling
 {
     public class UnityTaskScheduler : MonoBehaviour, ITaskScheduler
     {
-        private readonly IDependencyContainer container;
-        private readonly List<ITask> tasks;
+        private IDependencyContainer container;
+        private List<ITask> tasks;
         public ReadOnlyCollection<ITask> Tasks => tasks.AsReadOnly();
 
-        public UnityTaskScheduler(IDependencyContainer container)
+        public void Load(IDependencyContainer container)
         {
             this.container = container;
             tasks = new List<ITask>();
