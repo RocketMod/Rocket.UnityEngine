@@ -1,8 +1,8 @@
 ﻿using Rocket.API.DependencyInjection;
 using Rocket.API.Scheduler;
-using Rocket.Unity5.Scheduling;
+using Rocket.UnityEngine.Scheduling;
 
-namespace Rocket.Unity5.Properties
+namespace Rocket.UnityEngine.Properties
 {
     public class DependencyRegistrator : IDependencyRegistrator
     {

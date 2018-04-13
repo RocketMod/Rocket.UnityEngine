@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Rocket.API;
-using Rocket.API.DependencyInjection;
 using Rocket.API.Eventing;
+using Rocket.API.DependencyInjection;
 using Rocket.API.Scheduler;
 using UnityEngine;
 
-namespace Rocket.Unity5.Scheduling
+namespace Rocket.UnityEngine.Scheduling
 {
     public class UnityTaskScheduler : MonoBehaviour, ITaskScheduler
     {

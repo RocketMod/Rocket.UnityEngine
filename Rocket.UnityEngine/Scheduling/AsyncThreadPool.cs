@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using Rocket.API.Scheduler;
 
-namespace Rocket.Unity5.Scheduling
+namespace Rocket.UnityEngine.Scheduling
 {
     public class AsyncThreadPool
     {

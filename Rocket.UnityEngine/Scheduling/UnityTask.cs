@@ -2,7 +2,7 @@
 using Rocket.API;
 using Rocket.API.Scheduler;
 
-namespace Rocket.Unity5.Scheduling
+namespace Rocket.UnityEngine.Scheduling
 {
     public class UnityTask : ITask
     {
