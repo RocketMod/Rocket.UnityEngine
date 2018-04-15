@@ -24,7 +24,7 @@ namespace Rocket.UnityEngine.Scheduling
 
         public ITask ScheduleEveryFrame(ILifecycleObject @object, Action action)
         {
-            UnityTask task = new UnityTask(this, @object, action, ExecutionTargetContext.NextFrame);
+            UnityTask task = new UnityTask(this, @object, action, ExecutionTargetContext.EveryFrame);
             TriggerEvent(task);
             return task;
         }
