@@ -14,7 +14,7 @@ namespace Rocket.UnityEngine.Scheduling
     {
         private IDependencyContainer container;
         private List<ITask> tasks;
-        public ReadOnlyCollection<ITask> Tasks => tasks.AsReadOnly();
+        public ReadOnlyCollection<ITask> Tasks => tasks.Where(c => c.Owner.IsAlive).ToList().AsReadOnly();
 
         public void Load(IDependencyContainer container)
         {

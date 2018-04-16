@@ -6,7 +6,7 @@ namespace Rocket.UnityEngine.Scheduling
 {
     public class UnityTask : ITask
     {
-        private UnityTaskScheduler scheduler;
+        private readonly UnityTaskScheduler scheduler;
 
         public UnityTask(UnityTaskScheduler scheduler, ILifecycleObject owner, Action action,
                          ExecutionTargetContext executionTargetContext)
