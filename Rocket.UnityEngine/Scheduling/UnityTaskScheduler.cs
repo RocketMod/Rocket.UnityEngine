@@ -6,6 +6,7 @@ using Rocket.API;
 using Rocket.API.Eventing;
 using Rocket.API.DependencyInjection;
 using Rocket.API.Scheduler;
+using Rocket.Core.Scheduler;
 using UnityEngine;
 
 namespace Rocket.UnityEngine.Scheduling
@@ -87,7 +88,7 @@ namespace Rocket.UnityEngine.Scheduling
 
             if (!(task.Owner is IEventEmitter owner)) return;
 
-            IEventManager eventManager = container.Get<IEventManager>();
+            IEventManager eventManager = container.Resolve<IEventManager>();
 
             if (eventManager == null)
             {

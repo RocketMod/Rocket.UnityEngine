@@ -31,8 +31,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Rocket.API, Version=5.0.0.235, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rocket.API.5.0.0.235\lib\net35\Rocket.API.dll</HintPath>
+    <Reference Include="Rocket.API, Version=5.0.0.349, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rocket.API.5.0.0.349\lib\net35\Rocket.API.dll</HintPath>
+    </Reference>
+    <Reference Include="Rocket.Core, Version=5.0.0.349, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rocket.Core.5.0.0.349\lib\net35\Rocket.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -52,10 +55,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="Rocket.UnityEngine.nuspec">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>     
     <None Include="packages.config" />
+    <None Include="Rocket.UnityEngine.nuspec">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
