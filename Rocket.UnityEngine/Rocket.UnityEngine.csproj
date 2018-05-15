@@ -31,11 +31,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Rocket.API, Version=5.0.0.451, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rocket.API.5.0.0.451\lib\net35\Rocket.API.dll</HintPath>
+    <Reference Include="Rocket.API, Version=5.0.0.456, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rocket.API.5.0.0.456\lib\net35\Rocket.API.dll</HintPath>
     </Reference>
-    <Reference Include="Rocket.Core, Version=5.0.0.451, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rocket.Core.5.0.0.451\lib\net35\Rocket.Core.dll</HintPath>
+    <Reference Include="Rocket.Compatibility, Version=5.0.0.456, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rocket.Compatibility.5.0.0.456\lib\net35\Rocket.Compatibility.dll</HintPath>
+    </Reference>
+    <Reference Include="Rocket.Core, Version=5.0.0.456, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rocket.Core.5.0.0.456\lib\net35\Rocket.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

@@ -13,8 +13,9 @@
     <copyright>Sven Mawby&lt;fr34kyn01535@bam.yt&gt; ©</copyright>
     <tags>Rocket Mod UnityEngine</tags>
     <dependencies>
-      <dependency id="Rocket.API" version="5.0.0.451" />
-      <dependency id="Rocket.Core" version="5.0.0.451" />
+      <dependency id="Rocket.API" version="5.0.0.456" />
+      <dependency id="Rocket.Core" version="5.0.0.456" />
+      <dependency id="Rocket.Compatibility" version="5.0.0.456" />
     </dependencies>
   </metadata>
   <files>
