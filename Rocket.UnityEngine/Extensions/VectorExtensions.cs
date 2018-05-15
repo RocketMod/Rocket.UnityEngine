@@ -4,7 +4,7 @@ namespace Rocket.UnityEngine.Extensions
 {
     public static class VectorExtensions
     {
-        public static System.Numerics.Vector2 ToRocketVector(this Vector2 vector)
+        public static System.Numerics.Vector2 ToSystemVector(this Vector2 vector)
         {
             return new System.Numerics.Vector2
             {
@@ -22,7 +22,7 @@ namespace Rocket.UnityEngine.Extensions
             };
         }
 
-        public static System.Numerics.Vector3 ToRocketVector(this Vector3 vector)
+        public static System.Numerics.Vector3 ToSystemVector(this Vector3 vector)
         {
             return new System.Numerics.Vector3
             {
@@ -42,7 +42,7 @@ namespace Rocket.UnityEngine.Extensions
             };
         }
 
-        public static System.Numerics.Vector4 ToRocketVector(this Vector4 vector)
+        public static System.Numerics.Vector4 ToSystemVector(this Vector4 vector)
         {
             return new System.Numerics.Vector4
             {
