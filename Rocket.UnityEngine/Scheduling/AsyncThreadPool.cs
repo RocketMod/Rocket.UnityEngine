@@ -30,7 +30,9 @@ namespace Rocket.UnityEngine.Scheduling
         {
             while (true)
             {
-                foreach (ITask task in scheduler.Tasks.Where(c => !c.IsFinished && !c.IsCancelled))
+                var cpy = scheduler.Tasks.ToList(); // we need a copy because the task list may be modified at runtime
+
+                foreach (ITask task in cpy.Where(c => !c.IsFinished && !c.IsCancelled))
                 {
                     if (task.ExecutionTarget != ExecutionTargetContext.EveryAsyncFrame)
                         continue;
@@ -47,7 +49,9 @@ namespace Rocket.UnityEngine.Scheduling
             while (true)
             {
                 _waitHandle.WaitOne();
-                foreach (ITask task in scheduler.Tasks.Where(c => !c.IsFinished && !c.IsCancelled))
+                var cpy = scheduler.Tasks.ToList(); // we need a copy because the task list may be modified at runtime
+
+                foreach (ITask task in cpy.Where(c => !c.IsFinished && !c.IsCancelled))
                 {
                     if (task.ExecutionTarget != ExecutionTargetContext.NextAsyncFrame)
                         continue;

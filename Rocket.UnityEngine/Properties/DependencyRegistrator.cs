@@ -9,7 +9,7 @@ namespace Rocket.UnityEngine.Properties
     {
         public void Register(IDependencyContainer container, IDependencyResolver resolver)
         {
-            GameObject o = new GameObject();
+            GameObject o = new GameObject("Rocket.UnityEngine Task Runner");
             Object.DontDestroyOnLoad(o);
             var component = o.AddComponent<UnityTaskScheduler>();
             component.Load(container);
