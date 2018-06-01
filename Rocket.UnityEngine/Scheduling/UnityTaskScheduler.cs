@@ -17,7 +17,6 @@ namespace Rocket.UnityEngine.Scheduling
     {
         protected IDependencyContainer Container { get; set; }
         protected List<ITask> InternalTasks { get; set; }
-        protected ILogger Logger { get; set; }
 
         public ReadOnlyCollection<ITask> Tasks => 
             InternalTasks.Where(c => c.Owner.IsAlive).ToList().AsReadOnly();
@@ -25,25 +24,15 @@ namespace Rocket.UnityEngine.Scheduling
         public virtual void Load(IDependencyContainer container)
         {
             Container = container;
-            Logger = container.Resolve<ILogger>();
-
             InternalTasks = new List<ITask>();
-        }
-
-        protected virtual void OnEnable()
-        {
-            Logger.LogDebug("[UnityTaskScheduler] OnEnable");
-        }
-
-        protected virtual void OnDisable()
-        {
-            Logger.LogDebug("[UnityTaskScheduler] OnDisable");
         }
 
         protected virtual void OnDestroy()
         {
-            Logger.LogDebug("[UnityTaskScheduler] OnDestroy");
-            foreach(var task in Tasks)
+            var logger = Container.Resolve<ILogger>();
+            logger.LogDebug("[UnityTaskScheduler] OnDestroy");
+
+            foreach (var task in Tasks)
                 task.Cancel();
             InternalTasks.Clear();
         }
