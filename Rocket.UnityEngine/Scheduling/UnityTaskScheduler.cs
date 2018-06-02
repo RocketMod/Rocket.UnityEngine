@@ -23,6 +23,8 @@ namespace Rocket.UnityEngine.Scheduling
 
         public virtual void Load(IDependencyContainer container)
         {
+            (new AsyncThreadPool(this)).Start();
+
             Container = container;
             InternalTasks = new List<ITask>();
         }
