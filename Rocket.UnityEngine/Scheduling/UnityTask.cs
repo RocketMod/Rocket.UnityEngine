@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Rocket.API;
 using Rocket.API.Scheduler;
 
@@ -6,17 +7,25 @@ namespace Rocket.UnityEngine.Scheduling
 {
     public class UnityTask : ITask
     {
-        private readonly UnityTaskScheduler scheduler;
-
-        public UnityTask(UnityTaskScheduler scheduler, ILifecycleObject owner, Action action,
+        public UnityTask(int taskId, string name, UnityTaskScheduler scheduler, 
+                         ILifecycleObject owner, Action action,
                          ExecutionTargetContext executionTargetContext)
         {
-            this.scheduler = scheduler;
+            TaskId = taskId;
+            Name = name;
+            Scheduler = scheduler;
             Owner = owner;
             Action = action;
             ExecutionTarget = executionTargetContext;
         }
 
+        public int TaskId { get; }
+
+        public string Name { get; }
+        public TimeSpan? Period { get; internal set; }
+        public DateTime? StartTime { get; internal set; }
+        public DateTime? EndTime { get; internal set; }
+        public DateTime? LastRunTime { get; internal set; }
         public ILifecycleObject Owner { get; }
 
         public Action Action { get; }
@@ -27,11 +36,8 @@ namespace Rocket.UnityEngine.Scheduling
 
         public ExecutionTargetContext ExecutionTarget { get; }
 
-        public bool IsFinished { get; internal set; }
+        public bool IsFinished => IsCancelled || !Scheduler.Tasks.Contains(this);
 
-        public void Cancel()
-        {
-            scheduler.CancelTask(this);
-        }
+        public ITaskScheduler Scheduler { get; }
     }
 }

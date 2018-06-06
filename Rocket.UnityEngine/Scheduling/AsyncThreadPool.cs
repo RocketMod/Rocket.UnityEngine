@@ -37,7 +37,7 @@ namespace Rocket.UnityEngine.Scheduling
                     if (task.ExecutionTarget != ExecutionTargetContext.EveryAsyncFrame)
                         continue;
 
-                    task.Action.Invoke();
+                    scheduler.RunTask(task);
                 }
 
                 Thread.Sleep(20);
@@ -53,11 +53,11 @@ namespace Rocket.UnityEngine.Scheduling
 
                 foreach (ITask task in cpy.Where(c => !c.IsFinished && !c.IsCancelled))
                 {
-                    if (task.ExecutionTarget != ExecutionTargetContext.NextAsyncFrame)
+                    if (task.ExecutionTarget != ExecutionTargetContext.NextAsyncFrame &&
+                        task.ExecutionTarget != ExecutionTargetContext.Async)
                         continue;
 
-                    task.Action.Invoke();
-                    scheduler.RemoveTask(task);
+                    scheduler.RunTask(task);
                 }
             }
         }

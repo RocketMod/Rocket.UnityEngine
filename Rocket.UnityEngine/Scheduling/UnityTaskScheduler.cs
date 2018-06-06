@@ -15,11 +15,13 @@ namespace Rocket.UnityEngine.Scheduling
 {
     public class UnityTaskScheduler : MonoBehaviour, ITaskScheduler
     {
+        private static volatile int _taskIds = 0;
+
         protected IDependencyContainer Container { get; set; }
         protected List<ITask> InternalTasks { get; set; }
 
-        public ReadOnlyCollection<ITask> Tasks => 
-            InternalTasks.Where(c => c.Owner.IsAlive).ToList().AsReadOnly();
+        public IEnumerable<ITask> Tasks =>
+            InternalTasks.Where(c => c.Owner.IsAlive);
 
         public virtual void Load(IDependencyContainer container)
         {
@@ -39,29 +41,29 @@ namespace Rocket.UnityEngine.Scheduling
             InternalTasks.Clear();
         }
 
-        public virtual ITask ScheduleEveryFrame(ILifecycleObject @object, Action action)
+        public virtual ITask ScheduleEveryFrame(ILifecycleObject @object, Action action, string taskName)
         {
-            UnityTask task = new UnityTask(this, @object, action, ExecutionTargetContext.EveryFrame);
+            UnityTask task = new UnityTask(++_taskIds, taskName, this, @object, action, ExecutionTargetContext.EveryFrame);
             TriggerEvent(task);
             return task;
         }
 
-        public virtual ITask ScheduleNextFrame(ILifecycleObject @object, Action action)
+        public virtual ITask ScheduleNextFrame(ILifecycleObject @object, Action action, string taskName)
         {
-            UnityTask task = new UnityTask(this, @object, action, ExecutionTargetContext.NextFrame);
+            UnityTask task = new UnityTask(++_taskIds, taskName, this, @object, action, ExecutionTargetContext.NextFrame);
             TriggerEvent(task);
             return task;
         }
 
-        public virtual ITask Schedule(ILifecycleObject @object, Action action, ExecutionTargetContext target)
+        public virtual ITask ScheduleUpdate(ILifecycleObject @object, Action action, string taskName, ExecutionTargetContext target)
         {
-            UnityTask task = new UnityTask(this, @object, action, target);
+            UnityTask task = new UnityTask(++_taskIds, taskName, this, @object, action, target);
 
             TriggerEvent(task, (sender, @event) =>
             {
                 if (target != ExecutionTargetContext.Sync && @object.IsAlive) return;
 
-                if (@event != null && ((ICancellableEvent) @event).IsCancelled) return;
+                if (@event != null && ((ICancellableEvent)@event).IsCancelled) return;
 
                 action();
                 InternalTasks.Remove(task);
@@ -70,30 +72,30 @@ namespace Rocket.UnityEngine.Scheduling
             return task;
         }
 
-        public virtual ITask ScheduleNextPhysicUpdate(ILifecycleObject @object, Action action)
+        public virtual ITask ScheduleNextPhysicUpdate(ILifecycleObject @object, Action action, string taskName)
         {
-            UnityTask task = new UnityTask(this, @object, action, ExecutionTargetContext.NextPhysicsUpdate);
+            UnityTask task = new UnityTask(++_taskIds, taskName, this, @object, action, ExecutionTargetContext.NextPhysicsUpdate);
             TriggerEvent(task);
             return task;
         }
 
-        public virtual ITask ScheduleEveryPhysicUpdate(ILifecycleObject @object, Action action)
+        public virtual ITask ScheduleEveryPhysicUpdate(ILifecycleObject @object, Action action, string taskName)
         {
-            UnityTask task = new UnityTask(this, @object, action, ExecutionTargetContext.EveryPhysicsUpdate);
+            UnityTask task = new UnityTask(++_taskIds, taskName, this, @object, action, ExecutionTargetContext.EveryPhysicsUpdate);
             TriggerEvent(task);
             return task;
         }
 
-        public virtual ITask ScheduleEveryAsyncFrame(ILifecycleObject @object, Action action)
+        public virtual ITask ScheduleEveryAsyncFrame(ILifecycleObject @object, Action action, string taskName)
         {
-            UnityTask task = new UnityTask(this, @object, action, ExecutionTargetContext.EveryAsyncFrame);
+            UnityTask task = new UnityTask(++_taskIds, taskName, this, @object, action, ExecutionTargetContext.EveryAsyncFrame);
             TriggerEvent(task);
             return task;
         }
 
-        public virtual ITask ScheduleNextAsyncFrame(ILifecycleObject @object, Action action)
+        public virtual ITask ScheduleNextAsyncFrame(ILifecycleObject @object, Action action, string taskName)
         {
-            UnityTask task = new UnityTask(this, @object, action, ExecutionTargetContext.NextAsyncFrame);
+            UnityTask task = new UnityTask(++_taskIds, taskName, this, @object, action, ExecutionTargetContext.NextAsyncFrame);
             TriggerEvent(task);
             return task;
         }
@@ -129,8 +131,40 @@ namespace Rocket.UnityEngine.Scheduling
             if (task.IsFinished || task.IsCancelled)
                 return false;
 
-            ((UnityTask) task).IsCancelled = true;
+            ((UnityTask)task).IsCancelled = true;
             return true;
+        }
+
+        public ITask SchedulePeriodically(ILifecycleObject @object, Action action, string taskName, TimeSpan period,
+                                          TimeSpan? delay = null, bool runAsync = false)
+        {
+            UnityTask task = new UnityTask(++_taskIds, taskName, this, @object, action,
+                runAsync ? ExecutionTargetContext.Async : ExecutionTargetContext.Sync)
+            {
+                Period = period
+            };
+
+            if (delay != null)
+                task.StartTime = DateTime.Now + delay;
+
+            TriggerEvent(task);
+            return task;
+        }
+
+        public ITask ScheduleDelayed(ILifecycleObject @object, Action action, string taskName, TimeSpan delay, bool runAsync = false)
+        {
+            return ScheduleAt(@object, action, taskName, DateTime.Now + delay);
+        }
+
+        public ITask ScheduleAt(ILifecycleObject @object, Action action, string taskName, DateTime date, bool runAsync = false)
+        {
+            UnityTask task = new UnityTask(++_taskIds, taskName, this, @object, action,
+                runAsync ? ExecutionTargetContext.Async : ExecutionTargetContext.Sync)
+            {
+                StartTime = date
+            };
+            TriggerEvent(task);
+            return task;
         }
 
         public virtual void Update()
@@ -159,26 +193,46 @@ namespace Rocket.UnityEngine.Scheduling
             }
         }
 
-        protected virtual void RunTask(ITask task)
+        protected internal virtual void RunTask(ITask task)
         {
+            if (task.StartTime != null && task.StartTime > DateTime.Now)
+                return;
+
+            if (task.EndTime != null && task.EndTime < DateTime.Now)
+            {
+                ((UnityTask)task).EndTime = DateTime.Now;
+                RemoveTask(task);
+                return;
+            }
+
+            if (task.Period != null
+                && ((UnityTask) task).LastRunTime != null
+                && DateTime.Now - ((UnityTask) task).LastRunTime < task.Period)
+                return;
+
             try
             {
                 task.Action.Invoke();
+                ((UnityTask)task).LastRunTime = DateTime.Now;
             }
             catch (Exception e)
             {
-                ((UnityTask) task).Exception = e;
+                Container.Resolve<ILogger>().LogError("An exception occured in task: " + task.Name, e);
             }
 
             if (task.ExecutionTarget == ExecutionTargetContext.NextFrame
-                || task.ExecutionTarget == ExecutionTargetContext.NextPhysicsUpdate)
+                || task.ExecutionTarget == ExecutionTargetContext.NextPhysicsUpdate
+                || task.ExecutionTarget == ExecutionTargetContext.Async
+                || task.ExecutionTarget == ExecutionTargetContext.NextAsyncFrame
+                || task.ExecutionTarget == ExecutionTargetContext.Sync)
+            {
+                ((UnityTask)task).EndTime = DateTime.Now;
                 RemoveTask(task);
+            }
         }
 
         public virtual void RemoveTask(ITask task)
         {
-            UnityTask t = (UnityTask) task;
-            t.IsFinished = true;
             InternalTasks.Remove(task);
         }
     }
