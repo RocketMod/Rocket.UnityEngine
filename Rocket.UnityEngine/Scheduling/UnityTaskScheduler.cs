@@ -41,20 +41,6 @@ namespace Rocket.UnityEngine.Scheduling
             InternalTasks.Clear();
         }
 
-        public virtual ITask ScheduleEveryFrame(ILifecycleObject @object, Action action, string taskName)
-        {
-            UnityTask task = new UnityTask(++_taskIds, taskName, this, @object, action, ExecutionTargetContext.EveryFrame);
-            TriggerEvent(task);
-            return task;
-        }
-
-        public virtual ITask ScheduleNextFrame(ILifecycleObject @object, Action action, string taskName)
-        {
-            UnityTask task = new UnityTask(++_taskIds, taskName, this, @object, action, ExecutionTargetContext.NextFrame);
-            TriggerEvent(task);
-            return task;
-        }
-
         public virtual ITask ScheduleUpdate(ILifecycleObject @object, Action action, string taskName, ExecutionTargetContext target)
         {
             UnityTask task = new UnityTask(++_taskIds, taskName, this, @object, action, target);
@@ -69,34 +55,6 @@ namespace Rocket.UnityEngine.Scheduling
                 InternalTasks.Remove(task);
             });
 
-            return task;
-        }
-
-        public virtual ITask ScheduleNextPhysicUpdate(ILifecycleObject @object, Action action, string taskName)
-        {
-            UnityTask task = new UnityTask(++_taskIds, taskName, this, @object, action, ExecutionTargetContext.NextPhysicsUpdate);
-            TriggerEvent(task);
-            return task;
-        }
-
-        public virtual ITask ScheduleEveryPhysicUpdate(ILifecycleObject @object, Action action, string taskName)
-        {
-            UnityTask task = new UnityTask(++_taskIds, taskName, this, @object, action, ExecutionTargetContext.EveryPhysicsUpdate);
-            TriggerEvent(task);
-            return task;
-        }
-
-        public virtual ITask ScheduleEveryAsyncFrame(ILifecycleObject @object, Action action, string taskName)
-        {
-            UnityTask task = new UnityTask(++_taskIds, taskName, this, @object, action, ExecutionTargetContext.EveryAsyncFrame);
-            TriggerEvent(task);
-            return task;
-        }
-
-        public virtual ITask ScheduleNextAsyncFrame(ILifecycleObject @object, Action action, string taskName)
-        {
-            UnityTask task = new UnityTask(++_taskIds, taskName, this, @object, action, ExecutionTargetContext.NextAsyncFrame);
-            TriggerEvent(task);
             return task;
         }
 
@@ -149,11 +107,6 @@ namespace Rocket.UnityEngine.Scheduling
 
             TriggerEvent(task);
             return task;
-        }
-
-        public ITask ScheduleDelayed(ILifecycleObject @object, Action action, string taskName, TimeSpan delay, bool runAsync = false)
-        {
-            return ScheduleAt(@object, action, taskName, DateTime.Now + delay);
         }
 
         public ITask ScheduleAt(ILifecycleObject @object, Action action, string taskName, DateTime date, bool runAsync = false)
