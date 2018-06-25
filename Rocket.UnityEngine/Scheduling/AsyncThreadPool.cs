@@ -34,8 +34,9 @@ namespace Rocket.UnityEngine.Scheduling
 
                 foreach (ITask task in cpy.Where(c => !c.IsFinished && !c.IsCancelled))
                 {
-                    if (task.ExecutionTarget != ExecutionTargetContext.EveryAsyncFrame)
-                        continue;
+                    if(task.Period == null || (task.Period != null  && task.ExecutionTarget != ExecutionTargetContext.Async))         
+                        if (task.ExecutionTarget != ExecutionTargetContext.EveryAsyncFrame)
+                            continue;
 
                     scheduler.RunTask(task);
                 }
