@@ -125,9 +125,10 @@ namespace Rocket.UnityEngine.Scheduling
             var cpy = Tasks.ToList(); // we need a copy because the task list may be modified at runtime
             foreach (ITask task in cpy.Where(c => !c.IsFinished && !c.IsCancelled))
             {
-                if (task.ExecutionTarget != ExecutionTargetContext.EveryFrame
-                    && task.ExecutionTarget != ExecutionTargetContext.NextFrame)
-                    continue;
+                if(task.Period == null && task.ExecutionTarget != ExecutionTargetContext.Sync) 
+                    if (task.ExecutionTarget != ExecutionTargetContext.EveryFrame
+                        && task.ExecutionTarget != ExecutionTargetContext.NextFrame)
+                        continue;
 
                 RunTask(task);
             }
