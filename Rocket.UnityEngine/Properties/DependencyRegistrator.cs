@@ -1,5 +1,5 @@
 ﻿using Rocket.API.DependencyInjection;
-using Rocket.API.Scheduler;
+using Rocket.API.Scheduling;
 using Rocket.UnityEngine.Scheduling;
 using UnityEngine;
 
