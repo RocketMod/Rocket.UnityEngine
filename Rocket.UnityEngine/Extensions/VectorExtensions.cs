@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Vector2 = UnityEngine.Vector2;
+using Vector3 = UnityEngine.Vector3;
+using Vector4 = UnityEngine.Vector4;
 
 namespace Rocket.UnityEngine.Extensions
 {

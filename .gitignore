@@ -11,6 +11,7 @@
 *.userprefs
 
 UnityEngine.dll
+UnityEngine.CoreModule.dll
 
 # Build results
 [Dd]ebug/
