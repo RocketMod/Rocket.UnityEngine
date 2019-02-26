@@ -45,11 +45,17 @@ namespace Rocket.UnityEngine.Scheduling
         {
             UnityTask task = new UnityTask(++_taskIds, taskName, this, @object, action, target);
 
-            TriggerEvent(task, (sender, @event) =>
+            TriggerEvent(task, async (sender, @event) =>
             {
-                if (target != ExecutionTargetContext.Sync && @object.IsAlive) return;
+                if (target != ExecutionTargetContext.Sync && @object.IsAlive)
+                {
+                    return;
+                }
 
-                if (@event != null && ((ICancellableEvent)@event).IsCancelled) return;
+                if (@event != null && ((ICancellableEvent) @event).IsCancelled)
+                {
+                    return;
+                }
 
                 action();
                 InternalTasks.Remove(task);
@@ -73,7 +79,7 @@ namespace Rocket.UnityEngine.Scheduling
                 return;
             }
 
-            eventManager.Emit(owner, e, @event =>
+            eventManager.Emit(owner, e, async @event =>
             {
                 task.IsCancelled = e.IsCancelled;
 

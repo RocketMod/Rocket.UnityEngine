@@ -34,20 +34,31 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Rocket.API, Version=5.0.0.592, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rocket.API.5.0.0.592\lib\net35\Rocket.API.dll</HintPath>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=1.0.0.999, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.1.0.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="Rocket.Compatibility, Version=5.0.0.592, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rocket.Compatibility.5.0.0.592\lib\net35\Rocket.Compatibility.dll</HintPath>
+    <Reference Include="MoreLinq, Version=3.0.0.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
+      <HintPath>..\packages\morelinq.3.0.0\lib\net451\MoreLinq.dll</HintPath>
     </Reference>
-    <Reference Include="Rocket.Core, Version=5.0.0.592, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Rocket.Core.5.0.0.592\lib\net35\Rocket.Core.dll</HintPath>
+    <Reference Include="RestSharp, Version=106.3.1.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.106.3.1\lib\net452\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Rocket.API, Version=5.0.0.606, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rocket.API.5.0.0.606\lib\net461\Rocket.API.dll</HintPath>
+    </Reference>
+    <Reference Include="Rocket.Core, Version=5.0.0.606, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rocket.Core.5.0.0.606\lib\net461\Rocket.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Threading, Version=1.0.2856.102, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\TaskParallelLibrary.1.0.2856.0\lib\Net35\System.Threading.dll</HintPath>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
     </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
@@ -68,6 +79,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Rocket.UnityEngine.nuspec">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
