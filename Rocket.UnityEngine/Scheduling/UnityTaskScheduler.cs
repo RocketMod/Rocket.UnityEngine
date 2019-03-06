@@ -5,9 +5,11 @@ using System.Threading;
 using Rocket.API;
 using Rocket.API.Eventing;
 using Rocket.API.Scheduling;
+using Rocket.Core.Logging;
 using Rocket.Core.Scheduling;
 using Rocket.UnityEngine.DependencyInjection;
 using UnityEngine;
+using ILogger = Rocket.API.Logging.ILogger;
 
 namespace Rocket.UnityEngine.Scheduling
 {
