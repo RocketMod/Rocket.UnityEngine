@@ -6,60 +6,52 @@ namespace Rocket.UnityEngine.Scheduling
 {
     public class AsyncThreadPool
     {
-        private readonly UnityTaskScheduler scheduler;
-
+        private readonly UnityTaskScheduler m_TaskScheduler;
+        public EventWaitHandle EventWaitHandle { get; }
         public AsyncThreadPool(UnityTaskScheduler scheduler)
         {
-            this.scheduler = scheduler;
+            m_TaskScheduler = scheduler;
+            EventWaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
         }
 
-        private readonly EventWaitHandle _waitHandle = new EventWaitHandle(false, EventResetMode.AutoReset);
-        private Thread singleCallsThread;
-        private Thread continousCallsThreads;
+        private Thread m_TaskThread;
 
         public void Start()
         {
-            singleCallsThread = new Thread(SingleThreadLoop);
-            singleCallsThread.Start();
-
-            continousCallsThreads = new Thread(ContinousThreadLoop);
-            continousCallsThreads.Start();
+            m_TaskThread = new Thread(ContinousThreadLoop);
+            m_TaskThread.Start();
         }
 
         private void ContinousThreadLoop()
         {
-            while (true)
+            while (m_TaskScheduler)
             {
-                var cpy = scheduler.Tasks.ToList(); // we need a copy because the task list may be modified at runtime
+                var cpy = m_TaskScheduler.Tasks.Where(c => !c.IsFinished && !c.IsCancelled).ToList(); // we need a copy because the task list may be modified at runtime
 
-                foreach (ITask task in cpy.Where(c => !c.IsFinished && !c.IsCancelled))
+                foreach (ITask task in cpy)
                 {
-                    if(task.Period == null || (task.Period != null  && task.ExecutionTarget != ExecutionTargetContext.Async))         
+                    if (task.Period == null || (task.Period != null && task.ExecutionTarget != ExecutionTargetContext.Async))
                         if (task.ExecutionTarget != ExecutionTargetContext.EveryAsyncFrame)
                             continue;
 
-                    scheduler.RunTask(task);
+                    m_TaskScheduler.RunTask(task);
                 }
 
-                Thread.Sleep(20);
-            }
-        }
-
-        private void SingleThreadLoop()
-        {
-            while (true)
-            {
-                _waitHandle.WaitOne();
-                var cpy = scheduler.Tasks.ToList(); // we need a copy because the task list may be modified at runtime
-
-                foreach (ITask task in cpy.Where(c => !c.IsFinished && !c.IsCancelled))
+                foreach (ITask task in cpy)
                 {
                     if (task.ExecutionTarget != ExecutionTargetContext.NextAsyncFrame &&
                         task.ExecutionTarget != ExecutionTargetContext.Async)
                         continue;
 
-                    scheduler.RunTask(task);
+                    m_TaskScheduler.RunTask(task);
                 }
+
+                if (cpy.Count == 0)
+                {
+                    EventWaitHandle.WaitOne();
+                }
+
+                Thread.Sleep(20);
             }
         }
     }
