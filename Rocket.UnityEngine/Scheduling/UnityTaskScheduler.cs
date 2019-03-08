@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using Rocket.API;
+﻿using Rocket.API;
 using Rocket.API.Eventing;
 using Rocket.API.Scheduling;
 using Rocket.Core.Logging;
 using Rocket.Core.Scheduling;
 using Rocket.UnityEngine.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using UnityEngine;
 using ILogger = Rocket.API.Logging.ILogger;
 
@@ -103,14 +103,15 @@ namespace Rocket.UnityEngine.Scheduling
         public ITask SchedulePeriodically(ILifecycleObject @object, Action action, string taskName, TimeSpan period,
                                           TimeSpan? delay = null, bool runAsync = false)
         {
-            UnityTask task = new UnityTask(++m_NextTaskId, taskName, this, @object, action,
-                runAsync ? ExecutionTargetContext.Async : ExecutionTargetContext.Sync)
+            UnityTask task = new UnityTask(++m_NextTaskId, taskName, this, @object, action, runAsync ? ExecutionTargetContext.Async : ExecutionTargetContext.Sync)
             {
                 Period = period
             };
 
             if (delay != null)
-                task.StartTime = DateTime.Now + delay;
+            {
+                task.StartTime = DateTime.UtcNow + delay;
+            }
 
             TriggerEvent(task);
             return task;
@@ -157,25 +158,29 @@ namespace Rocket.UnityEngine.Scheduling
 
         protected internal virtual void RunTask(ITask task)
         {
-            if (task.StartTime != null && task.StartTime > DateTime.Now)
-                return;
-
-            if (task.EndTime != null && task.EndTime < DateTime.Now)
+            if (task.StartTime != null && task.StartTime > DateTime.UtcNow)
             {
-                ((UnityTask)task).EndTime = DateTime.Now;
+                return;
+            }
+
+            if (task.EndTime != null && task.EndTime < DateTime.UtcNow)
+            {
+                ((UnityTask)task).EndTime = DateTime.UtcNow;
                 RemoveTask(task);
                 return;
             }
 
             if (task.Period != null
                 && ((UnityTask)task).LastRunTime != null
-                && DateTime.Now - ((UnityTask)task).LastRunTime < task.Period)
+                && DateTime.UtcNow - ((UnityTask)task).LastRunTime < task.Period)
+            {
                 return;
+            }
 
             try
             {
                 task.Action.Invoke();
-                ((UnityTask)task).LastRunTime = DateTime.Now;
+                ((UnityTask)task).LastRunTime = DateTime.UtcNow;
             }
             catch (Exception e)
             {
@@ -184,11 +189,11 @@ namespace Rocket.UnityEngine.Scheduling
 
             if (task.ExecutionTarget == ExecutionTargetContext.NextFrame
                 || task.ExecutionTarget == ExecutionTargetContext.NextPhysicsUpdate
-                || task.ExecutionTarget == ExecutionTargetContext.Async
+                || (task.ExecutionTarget == ExecutionTargetContext.Async && task.Period == null)
                 || task.ExecutionTarget == ExecutionTargetContext.NextAsyncFrame
-                || task.ExecutionTarget == ExecutionTargetContext.Sync)
+                || task.ExecutionTarget == ExecutionTargetContext.Sync && task.Period == null)
             {
-                ((UnityTask)task).EndTime = DateTime.Now;
+                ((UnityTask)task).EndTime = DateTime.UtcNow;
                 RemoveTask(task);
             }
         }

@@ -32,8 +32,6 @@ namespace Rocket.UnityEngine.Scheduling
 
         public bool IsCancelled { get; internal set; }
 
-        public Exception Exception { get; internal set; }
-
         public ExecutionTargetContext ExecutionTarget { get; }
 
         public bool IsFinished => IsCancelled || !Scheduler.Tasks.Contains(this);
