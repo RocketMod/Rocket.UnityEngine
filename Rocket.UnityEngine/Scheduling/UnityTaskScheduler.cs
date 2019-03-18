@@ -96,6 +96,8 @@ namespace Rocket.UnityEngine.Scheduling
             if (task.IsFinished || task.IsCancelled)
                 return false;
 
+            m_Logger.LogDebug("Cancelled task: " + task.Name);
+
             ((UnityTask)task).IsCancelled = true;
             return true;
         }
@@ -108,10 +110,14 @@ namespace Rocket.UnityEngine.Scheduling
                 Period = period
             };
 
+            string debugMessage = $"Scheduled task \"{taskName}\", will run every {period}";
             if (delay != null)
             {
                 task.StartTime = DateTime.UtcNow + delay;
+                debugMessage += $" and start after: {delay}.";
             }
+
+            m_Logger.LogDebug(debugMessage);
 
             TriggerEvent(task);
             return task;
@@ -125,6 +131,8 @@ namespace Rocket.UnityEngine.Scheduling
                 StartTime = date
             };
 
+            m_Logger.LogDebug($"Scheduled task \"{taskName}\", will run in: {date - DateTime.UtcNow}");
+
             TriggerEvent(task);
             return task;
         }
@@ -134,10 +142,10 @@ namespace Rocket.UnityEngine.Scheduling
             var cpy = Tasks.ToList(); // we need a copy because the task list may be modified at runtime
             foreach (ITask task in cpy.Where(c => !c.IsFinished && !c.IsCancelled))
             {
-                if (task.Period == null || (task.Period != null && task.ExecutionTarget != ExecutionTargetContext.Sync))
-                    if (task.ExecutionTarget != ExecutionTargetContext.EveryFrame
-                        && task.ExecutionTarget != ExecutionTargetContext.NextFrame)
-                        continue;
+                if (task.ExecutionTarget != ExecutionTargetContext.EveryFrame
+                    && task.ExecutionTarget != ExecutionTargetContext.NextFrame
+                    && task.ExecutionTarget != ExecutionTargetContext.Sync)
+                    continue;
 
                 RunTask(task);
             }
@@ -179,6 +187,8 @@ namespace Rocket.UnityEngine.Scheduling
 
             try
             {
+                m_Logger.LogTrace("Running task: " + task.Name);
+
                 task.Action.Invoke();
                 ((UnityTask)task).LastRunTime = DateTime.UtcNow;
             }
