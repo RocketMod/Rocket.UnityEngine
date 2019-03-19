@@ -15,7 +15,7 @@ namespace Rocket.UnityEngine.Scheduling
 {
     public class UnityTaskScheduler : MonoBehaviour, ITaskScheduler
     {
-        public IEnumerable<ITask> Tasks => m_Tasks;
+        public IEnumerable<IScheduledTask> Tasks => m_Tasks;
 
         private static volatile int m_NextTaskId;
 
@@ -27,7 +27,7 @@ namespace Rocket.UnityEngine.Scheduling
 
         public Thread MainThread { get; private set; }
 
-        private readonly List<ITask> m_Tasks = new List<ITask>();
+        private readonly List<IScheduledTask> m_Tasks = new List<IScheduledTask>();
         private AsyncThreadPool m_AsyncThreadPool;
 
         protected virtual void Awake()
@@ -45,7 +45,7 @@ namespace Rocket.UnityEngine.Scheduling
             m_Tasks.Clear();
         }
 
-        public virtual ITask ScheduleUpdate(ILifecycleObject @object, Action action, string taskName, ExecutionTargetContext target)
+        public virtual IScheduledTask ScheduleUpdate(ILifecycleObject @object, Action action, string taskName, ExecutionTargetContext target)
         {
             UnityTask task = new UnityTask(++m_NextTaskId, taskName, this, @object, action, target);
             TriggerEvent(task, async (sender, @event) =>
@@ -91,7 +91,7 @@ namespace Rocket.UnityEngine.Scheduling
             });
         }
 
-        public virtual bool CancelTask(ITask task)
+        public virtual bool CancelTask(IScheduledTask task)
         {
             if (task.IsFinished || task.IsCancelled)
                 return false;
@@ -102,7 +102,7 @@ namespace Rocket.UnityEngine.Scheduling
             return true;
         }
 
-        public ITask SchedulePeriodically(ILifecycleObject @object, Action action, string taskName, TimeSpan period,
+        public IScheduledTask SchedulePeriodically(ILifecycleObject @object, Action action, string taskName, TimeSpan period,
                                           TimeSpan? delay = null, bool runAsync = false)
         {
             UnityTask task = new UnityTask(++m_NextTaskId, taskName, this, @object, action, runAsync ? ExecutionTargetContext.Async : ExecutionTargetContext.Sync)
@@ -123,7 +123,7 @@ namespace Rocket.UnityEngine.Scheduling
             return task;
         }
 
-        public ITask ScheduleAt(ILifecycleObject @object, Action action, string taskName, DateTime date, bool runAsync = false)
+        public IScheduledTask ScheduleAt(ILifecycleObject @object, Action action, string taskName, DateTime date, bool runAsync = false)
         {
             UnityTask task = new UnityTask(++m_NextTaskId, taskName, this, @object, action,
                 runAsync ? ExecutionTargetContext.Async : ExecutionTargetContext.Sync)
@@ -140,7 +140,7 @@ namespace Rocket.UnityEngine.Scheduling
         protected virtual void Update()
         {
             var cpy = Tasks.ToList(); // we need a copy because the task list may be modified at runtime
-            foreach (ITask task in cpy.Where(c => !c.IsFinished && !c.IsCancelled))
+            foreach (IScheduledTask task in cpy.Where(c => !c.IsFinished && !c.IsCancelled))
             {
                 if (task.ExecutionTarget != ExecutionTargetContext.EveryFrame
                     && task.ExecutionTarget != ExecutionTargetContext.NextFrame
@@ -154,7 +154,7 @@ namespace Rocket.UnityEngine.Scheduling
         protected virtual void FixedUpdate()
         {
             var cpy = Tasks.ToList(); // we need a copy because the task list may be modified at runtime
-            foreach (ITask task in cpy.Where(c => !c.IsFinished && !c.IsCancelled))
+            foreach (IScheduledTask task in cpy.Where(c => !c.IsFinished && !c.IsCancelled))
             {
                 if (task.ExecutionTarget != ExecutionTargetContext.EveryPhysicsUpdate
                     && task.ExecutionTarget != ExecutionTargetContext.NextPhysicsUpdate)
@@ -164,7 +164,7 @@ namespace Rocket.UnityEngine.Scheduling
             }
         }
 
-        protected internal virtual void RunTask(ITask task)
+        protected internal virtual void RunTask(IScheduledTask task)
         {
             if (task.StartTime != null && task.StartTime > DateTime.UtcNow)
             {
@@ -208,7 +208,7 @@ namespace Rocket.UnityEngine.Scheduling
             }
         }
 
-        public virtual void RemoveTask(ITask task)
+        public virtual void RemoveTask(IScheduledTask task)
         {
             m_Tasks.Remove(task);
         }

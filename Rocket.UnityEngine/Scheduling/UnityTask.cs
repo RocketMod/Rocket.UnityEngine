@@ -5,7 +5,7 @@ using Rocket.API.Scheduling;
 
 namespace Rocket.UnityEngine.Scheduling
 {
-    public class UnityTask : ITask
+    public class UnityTask : IScheduledTask
     {
         public UnityTask(int taskId, string name, UnityTaskScheduler scheduler, 
                          ILifecycleObject owner, Action action,

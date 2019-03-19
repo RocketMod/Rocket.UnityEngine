@@ -28,7 +28,7 @@ namespace Rocket.UnityEngine.Scheduling
             {
                 var cpy = m_TaskScheduler.Tasks.Where(c => !c.IsFinished && !c.IsCancelled).ToList(); // we need a copy because the task list may be modified at runtime
 
-                foreach (ITask task in cpy)
+                foreach (IScheduledTask task in cpy)
                 {
                     if (task.Period == null || (task.Period != null && task.ExecutionTarget != ExecutionTargetContext.Async))
                         if (task.ExecutionTarget != ExecutionTargetContext.EveryAsyncFrame)
@@ -37,7 +37,7 @@ namespace Rocket.UnityEngine.Scheduling
                     m_TaskScheduler.RunTask(task);
                 }
 
-                foreach (ITask task in cpy)
+                foreach (IScheduledTask task in cpy)
                 {
                     if (task.ExecutionTarget != ExecutionTargetContext.NextAsyncFrame &&
                         task.ExecutionTarget != ExecutionTargetContext.Async)
