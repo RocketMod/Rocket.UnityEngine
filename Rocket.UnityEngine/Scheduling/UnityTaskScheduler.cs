@@ -17,7 +17,7 @@ namespace Rocket.UnityEngine.Scheduling
 
         protected virtual void FixedUpdate()
         {
-            m_TaskScheduler.RunFrameUpdate(ExecutionTargetSide.PhsyicsFrame);
+            m_TaskScheduler.RunFrameUpdate(ExecutionTargetSide.PhysicsFrame);
         }
     }
 }
