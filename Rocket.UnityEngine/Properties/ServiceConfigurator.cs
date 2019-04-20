@@ -1,19 +1,17 @@
 ﻿using Rocket.API.DependencyInjection;
-using Rocket.API.Scheduling;
 using Rocket.UnityEngine.DependencyInjection;
 using Rocket.UnityEngine.Scheduling;
 using UnityEngine;
 
 namespace Rocket.UnityEngine.Properties
 {
-    public class DependencyRegistrator : IDependencyRegistrator
+    public class ServiceConfigurator : IServiceConfigurator
     {
-        public void Register(IDependencyContainer container, IDependencyResolver resolver)
+        public void ConfigureServices(IDependencyContainer container)
         {
             GameObject o = new GameObject("Rocket.UnityEngine Task Scheduler");
             Object.DontDestroyOnLoad(o);
-            var component = o.AddComponentWithInjection<UnityTaskScheduler>(container);
-            container.RegisterInstance<ITaskScheduler>(component);
+            o.AddComponentWithInjection<UnityTaskRunnerComponent>(container);
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using JetBrains.Annotations;
 using Rocket.API.DependencyInjection;
 using UnityEngine;
 
@@ -63,7 +62,7 @@ namespace Rocket.UnityEngine.DependencyInjection
             return addedComponent;
         }
 
-        private static void InjectProperty([NotNull] PropertyInfo property, [NotNull] IDependencyContainer container, [NotNull] Component component)
+        private static void InjectProperty(PropertyInfo property, IDependencyContainer container, Component component)
         {
             if (property.GetCustomAttributes().Any(d => d is UnityAutoInjectAttribute))
             {
@@ -78,7 +77,7 @@ namespace Rocket.UnityEngine.DependencyInjection
             }
         }
 
-        private static void InjectField([NotNull] FieldInfo field, [NotNull] IDependencyContainer container, [NotNull] Component component)
+        private static void InjectField(FieldInfo field, IDependencyContainer container, Component component)
         {
 
             if (field.GetCustomAttributes().Any(d => d is UnityAutoInjectAttribute))
